@@ -1,40 +1,33 @@
-
-interface MyCustomSet {
-    intersectWith(customSet: MyCustomSet): MyCustomSet;
-
-    unionWith(customSet: MyCustomSet): MyCustomSet;
-
-    isSubsetOf(customSet: MyCustomSet): boolean
-
-    isSupersetOf(customSet: MyCustomSet): boolean
-
-    getDifference(customSet: MyCustomSet): MyCustomSet;
-
-    symmetricDifferenceWith(customSet: MyCustomSet): MyCustomSet;
-
-    add(element: any): void;
-    delete(element: any): void;
-    has(element: any): boolean
+interface MyCustomSet<T> {
+    intersectWith(customSet: MyCustomSet<T>): MyCustomSet<T>;
+    unionWith(customSet: MyCustomSet<T>): MyCustomSet<T>;
+    isSubsetOf(customSet: MyCustomSet<T>): boolean;
+    isSupersetOf(customSet: MyCustomSet<T>): boolean;
+    getDifference(customSet: MyCustomSet<T>): MyCustomSet<T>;
+    symmetricDifferenceWith(customSet: MyCustomSet<T>): MyCustomSet<T>;
+    add(element: T): MyCustomSet<T>;
+    delete(element: T): void;
+    has(element: T): boolean
     clear(): void;
     size(): number;
-    forEach(callback: (element: any) => void): void;
-    toArray(): void;
+    forEach(callback: (element: T) => void): void;
+    toArray(): T[];
 }
 
-const SetLibrary = (): MyCustomSet => {
+export const SetLibrary = <T>(): MyCustomSet<T> => {
 
-    const set = new Set()
+    let set: T[] = []
 
     return {
-          toArray() {
-            return Array.from(set)
+        toArray() {
+            return [...set]
         },
         forEach(callback) {
             set.forEach(callback)
         },
         intersectWith(customSet) {
 
-            const intersectSet = SetLibrary()
+            const intersectSet = SetLibrary<T>()
             for (const el of set) {
                 if (customSet.has(el)) {
                     intersectSet.add(el)
@@ -43,7 +36,7 @@ const SetLibrary = (): MyCustomSet => {
             return intersectSet
         },
         unionWith(customSet) {
-            const unionSet = SetLibrary()
+            const unionSet = SetLibrary<T>()
             for (const el of set) {
                 unionSet.add(el)
             }
@@ -51,22 +44,24 @@ const SetLibrary = (): MyCustomSet => {
             return unionSet
         },
         isSubsetOf(customSet) {
-            for(const el of set) {
-                if(!customSet.has(el)) {
+            for (const el of set) {
+                if (!customSet.has(el)) {
                     return false
                 }
             }
-             return true
+            return true
         },
         isSupersetOf(customSet) {
-         let result = true
-            customSet.forEach(el => {
-                if (!set.has(el)) result = false
-            })
-            return result
+            if (customSet.size() !== 0) return true;
+            for (const el of customSet.toArray()) {
+                if (!set.includes(el)) {
+                    return false
+                }
+            }
+            return true
         },
         getDifference(customSet) {
-            const getDifferenceSet = SetLibrary()
+            const getDifferenceSet = SetLibrary<T>()
             for (const el of set) {
                 if (!customSet.has(el)) {
                     getDifferenceSet.add(el)
@@ -75,53 +70,41 @@ const SetLibrary = (): MyCustomSet => {
             return getDifferenceSet
         },
         symmetricDifferenceWith(customSet) {
-            const symmetricDifferenceSet = SetLibrary()
+            const symmetricDifferenceSet = SetLibrary<T>()
             for (const el of set) {
                 if (!customSet.has(el)) {
                     symmetricDifferenceSet.add(el)
                 }
             }
-            customSet.forEach(el => {
-                if(!set.has(el)) {
+            for (const el of customSet.toArray()) {
+                if (!set.includes(el)) {
                     symmetricDifferenceSet.add(el)
                 }
-            })
+            }
             return symmetricDifferenceSet
         },
         add(element) {
-            set.add(element)
+            if (!set.includes(element)) {
+                set.push(element)
+            }
+            return this
         },
         delete(element) {
-            set.delete(element)
+            const index = set.indexOf(element)
+            if (index > -1) {
+                set.splice(index, 1)
+            }
         },
         has(element) {
-           return set.has(element)
+            return set.includes(element)
         },
         clear() {
-            set.clear()
+            set = []
         },
         size() {
-            return set.size
+            return set.length
         }
     }
 
 }
 
-const set1 = SetLibrary()
-const set2 = SetLibrary()
-
-set1.add(1)
-set1.add(2)
-set1.add(3)
-set2.add(2)
-set2.add(3)
-
-console.log('Пересечение ',set1.intersectWith(set2).toArray())
-console.log('Объединение ', set1.unionWith(set2).toArray());
-console.log('Отличия 1 от 2 ', set1.getDifference(set2).toArray()); 
-console.log('Отличия 1 и 2 ', set1.symmetricDifferenceWith(set2).toArray()); 
-console.log('Подмножество ', set1.isSubsetOf(set2));
-console.log('Надмножество ', set1.isSupersetOf(set2));
-set2.delete(3)
-set1.clear()
-console.log(set1.toArray(), set2.toArray(), set2.has(2))
