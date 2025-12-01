@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.page {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+.page h1 {
+  margin-bottom: 10px;
+}
+
+.navbar {
+  background: #b5b5b5;
+  padding: 15px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  background: #672a49;
+  border-radius: 4px;
+}
+
+.second-page .topics {
+  margin-top: 25px;
+  padding: 15px;
+  background: #e8f5e9;
+  border-radius: 5px;
+}
+
+.second-page ul {
+  list-style-position: inside;
+  margin-top: 10px;
+}
