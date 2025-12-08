@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --config jest.config.ts",
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "dev": "NODE_ENV=development webpack",
+    "build": "NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",

@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Menu } from '../components/Menu';
 
 const menuItems = [
-  { name: 'Home', link: '/home', items: [] },
+  { name: 'Home', link: '/', items: [] },
   {
     name: 'News',
     items: [{ name: 'Breaking news', link: '/news/breaking', items: [] }],
