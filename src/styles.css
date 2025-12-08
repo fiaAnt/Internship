@@ -1,0 +1,28 @@
+body {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 1.5em;
+  background-color: #ece6cd;
+}
+
+.menu {
+  background-color: #dab2a5;
+  border: 5px solid #ee6a59;
+  padding: 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.menu a {
+  text-decoration: none;
+  list-style: none;
+  color: white;
+}
+
+.menu-label {
+  color: white;
+}
+
+.menu-root {
+  background-color: #dfbeb4;
+  list-style: none;
+}
