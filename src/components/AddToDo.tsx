@@ -9,7 +9,7 @@ const AddToDo = () => {
 
   const createNote = () => {
     if (text) {
-      dispatch(addTodoAsync(text));
+      dispatch(addTodoAsync(text.trim()));
       setText('');
     }
   };
@@ -20,6 +20,7 @@ const AddToDo = () => {
         placeholder="note"
         value={text}
         onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && createNote()}
       ></input>
       <button className="createButton" onClick={createNote}>
         create

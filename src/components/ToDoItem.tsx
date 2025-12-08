@@ -11,8 +11,6 @@ interface ToDoItemProps {
 const ToDoItem: React.FC<ToDoItemProps> = ({ note }) => {
   const dispatch = useAppDispatch();
 
-  useEffect(() => {}, [note]);
-
   const handleToggle = () => {
     dispatch(toggleNote(note.id));
   };
