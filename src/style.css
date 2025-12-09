@@ -1,0 +1,156 @@
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #bbc1c7;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.select-project {
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.board {
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.board-header {
+  display: flex;
+  width: 200px;
+  padding: 20px;
+  flex-direction: column;
+  justify-content: left;
+  margin-bottom: 20px;
+}
+
+.btn-create {
+  padding: 8px 16px;
+  background: #3c6e45;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.close-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.settings-btn {
+  padding: 8px 16px;
+  background: #b1b2b5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.columns-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+.column {
+  background: #ffffff;
+  border-radius: 8px;
+  min-width: 280px;
+  padding: 12px;
+  flex: 1;
+  box-shadow: 0 1px 3px #7e7f81;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-card {
+  background: #fefefe;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 2px 6px #7e7f81;
+  cursor: grab;
+  position: relative;
+  transition: transform 0.1s;
+}
+
+.task-card:hover {
+  transform: translateY(-5px);
+}
+
+.task-priority-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 800px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 90%;
+  padding: 8px;
+  margin: 4px;
+  border: 1px solid #a1a3a5;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal-actions button:first-child {
+  background: #ef4444;
+  color: white;
+}
+
+.modal-actions button:last-child {
+  background: #3c6e45;
+  color: white;
+}
