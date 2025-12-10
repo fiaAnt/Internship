@@ -6,170 +6,150 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} ${req.method} ${req.url}`)
-    console.log('Body:', req.body)
-    next()
-})
-
 mongoose.connect("mongodb://localhost:27017/scooters")
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err))
 
-app.post('/api', async (req, res) => {
-    if (!req.body || typeof req.body !== 'object') {
-        return res.status(400).json({
-            success: false,
-            error: 'Request body must be JSON object'
-        })
-    }
-
-    const { operation, data } = req.body
-
-    if (!operation) {
-        return res.status(400).json({
-            success: false,
-            error: 'Operation is required and must be a string'
-        })
-    }
-
+app.get('/scooters', async (req, res) => {
     try {
-        console.log(`Operation: ${operation}`, data)
-
-        switch (operation) {
-            case 'getAllScooters':
-                const allScooters = await ScooterModel.find()
-                return res.json({
-                    success: true,
-                    count: allScooters.length,
-                    data: allScooters
-                })
-
-            case 'getScooterBySSN':
-                if (!data?.ssn) {
-                    return res.json({
-                        success: false,
-                        error: 'SSN is required'
-                    })
-                }
-
-                const found = await ScooterModel.findOne({ ssn: data.ssn })
-                if (!found) {
-                    return res.json({
-                        success: false,
-                        error: 'Scooter not found'
-                    })
-                }
-                return res.json({ success: true, data: found })
-
-            case 'createScooter':
-                if (!data?.ssn) {
-                    return res.json({
-                        success: false,
-                        error: 'SSN is required for creation'
-                    })
-                }
-
-                try {
-                    const created = await ScooterModel.create(data)
-                    return res.json({
-                        success: true,
-                        message: 'Scooter created',
-                        data: created
-                    })
-                } catch (err: any) {
-                    return res.json({
-                        success: false,
-                        error: err.message
-                    })
-                }
-
-            case 'updateScooter':
-                if (!data?.ssn) {
-                    return res.json({
-                        success: false,
-                        error: 'SSN is required for update'
-                    })
-                }
-
-                const { ssn, ...updates } = data
-                const updatedScooter = await ScooterModel.findOneAndUpdate(
-                    { ssn },
-                    { $set: updates },
-                    { new: true, runValidators: true }
-                )
-
-                if (!updatedScooter) {
-                    return res.json({
-                        success: false,
-                        error: 'Scooter not found'
-                    })
-                }
-
-                return res.json({
-                    success: true,
-                    message: 'Scooter updated',
-                    data: updatedScooter
-                })
-
-            case 'deleteScooter':
-                if (!data?.ssn) {
-                    return res.json({
-                        success: false,
-                        error: 'SSN is required for deletion'
-                    })
-                }
-
-                const result = await ScooterModel.deleteOne({ ssn: data.ssn })
-
-                if (!result.deletedCount) {
-                    return res.json({
-                        success: false,
-                        error: 'Scooter not found'
-                    })
-                }
-
-                return res.json({
-                    success: true,
-                    message: 'Scooter deleted'
-                })
-
-            case 'getFreeScooters':
-                const freeScooters = await ScooterModel.find({ status: 'Free' })
-                return res.json({
-                    success: true,
-                    count: freeScooters.length,
-                    data: freeScooters
-                })
-
-            case 'getScootersByStatus':
-                if (!data?.status) {
-                    return res.json({
-                        success: false,
-                        error: 'Status is required'
-                    })
-                }
-                const statusScooters = await ScooterModel.find({
-                    status: data.status
-                })
-                return res.json({
-                    success: true,
-                    count: statusScooters.length,
-                    data: statusScooters
-                })
-
-            default:
-                return res.json({
-                    success: false,
-                    error: `Unknown operation: ${operation}`
-                })
-        }
-    } catch (err: any) {
-        console.error('Error:', err.message)
-        return res.status(500).json({
+        const scooters = await ScooterModel.find()
+        res.status(200).json({
+            success: true,
+            count: scooters.length,
+            data: scooters
+        })
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown'
+        res.status(500).json({
             success: false,
-            error: 'Internal server error',
-            details: err.message
+            error: errorMessage
+        })
+    }
+})
+
+app.get('/scooters/:ssn', async (req, res) => {
+    try {
+        const scooter = await ScooterModel.findOne({ ssn: req.params.ssn })
+        if (!scooter) {
+            return res.status(404).json({
+                success: false,
+                error: 'not found'
+            })
+        }
+        res.status(200).json({
+            success: true,
+            data: scooter
+        })
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown'
+        res.status(500).json({
+            success: false,
+            error: errorMessage
+        })
+    }
+})
+
+app.post('/scooters', async (req, res) => {
+    try {
+        if (!req.body.ssn) {
+            return res.status(400).json({
+                success: false,
+                error: 'ssn error'
+            })
+        }
+        const newScooter = await ScooterModel.create(req.body)
+        res.status(201).json({
+            success: true,
+            message: 'scooter created',
+            data: newScooter
+        })
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown'
+        res.status(400).json({
+            success: false,
+            error: errorMessage
+        })
+    }
+})
+
+app.put('/scooters/:ssn', async (req, res) => {
+    try {
+        const uptatedScooter = await ScooterModel.findOneAndUpdate(
+            { ssn: req.params.ssn },
+            { $set: req.body },
+            { new: true, runValidators: true }
+        )
+        if (!uptatedScooter) {
+            return res.status(404).json({
+                success: false,
+                error: 'scooter not found'
+            })
+        }
+        res.status(200).json({
+            success: true,
+            message: 'scooter updated',
+            data: uptatedScooter
+        })
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown'
+        res.status(400).json({
+            success: false,
+            error: errorMessage
+        })
+    }
+})
+
+app.delete('/scooters/:snn', async (req, res) => {
+    try {
+        const result = await ScooterModel.deleteOne({ ssn: req.params.snn })
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'scooter not found'
+            })
+        }
+        res.status(204).send()
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown'
+        res.status(500).json({
+            success: false,
+            error: errorMessage
+        })
+    }
+})
+
+app.get('/scooters/status/:status', async (req, res) => {
+    try {
+        const scooters = await ScooterModel.find({
+            status: req.params.status
+        })
+        res.status(200).json({
+            success: true,
+            count: scooters.length,
+            data: scooters
+        })
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown'
+        res.status(500).json({
+            success: false,
+            error: errorMessage
+        })
+    }
+})
+
+app.get('/scooters/free', async (req, res) => {
+    try {
+        const scooters = await ScooterModel.find({ status: 'Free' })
+        res.status(200).json({
+            success: true,
+            count: scooters.length,
+            data: scooters
+        })
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown'
+        res.status(500).json({
+            success: false,
+            error: errorMessage
         })
     }
 })
@@ -177,5 +157,5 @@ app.post('/api', async (req, res) => {
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-    console.log(`📡 Server running on http://localhost:${PORT}`)
+    console.log(`Server running on http://localhost:${PORT}`)
 })
