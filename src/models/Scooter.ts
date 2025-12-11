@@ -3,14 +3,32 @@ const { Schema } = mongoose
 
 export interface IScooter extends mongoose.Document {
     ssn: string;
-    productionInfo: IProductionInfo;
+    productionInfo: {
+        brand: string;
+        model?: string;
+        date?: Date;
+    };
     status: 'Free' | 'Reserved' | 'In use' | 'Unavailable' | 'In Service';
     chargeLevel: number;
     currentRun?: ICurrentRun | null;
-    location: ILocation;
-    bookingsHistory: IBooking[];
+    location: {
+        type: 'Point';
+        coordinates: [number, number];
+    };
     createdAt: Date;
     updatedAt: Date;
+    links?: IHATEOASLinks;
+}
+
+
+export interface IHATEOASLinks {
+    [key: string]: ILink | undefined;
+}
+
+export interface ILink {
+    href: string;
+    method: string;
+    description?: string;
 }
 
 export interface ICreditCard {
@@ -19,16 +37,10 @@ export interface ICreditCard {
     validThrough: Date;
 }
 
-export interface IDriver {
-    id: string;
-    firstName: string;
-    lastName: string;
-    creditCard: ICreditCard;
-}
-
 export interface ICurrentRun {
     startDate: Date;
-    driver: IDriver;
+    driverId: string;
+    bookingId?: string;
     startChargeLevel: number;
     startMileage: number;
 }
@@ -79,21 +91,11 @@ const scooterSchema = new Schema({
 
     currentRun: {
         startDate: Date,
-        driver: {
-            id: String,
-            firstName: String,
-            lastName: String,
-            creditCard: {
-                number: String,
-                owner: String,
-                validThrough: Date
-            }
-        },
+        driverId: String,
+        bookingId: Schema.Types.ObjectId,
         startChargeLevel: Number,
-
         startMileage: Number
     },
-
     location: {
         type: {
             type: String,
@@ -105,26 +107,6 @@ const scooterSchema = new Schema({
             default: [0, 0]
         }
     },
-
-    bookingsHistory: [{
-        startDate: Date,
-        driver: {
-            id: String,
-            firstName: String,
-            lastName: String,
-            creditCard: {
-                number: String,
-                owner: String,
-                validThrough: Date
-            }
-        },
-        startChargeLevel: Number,
-        startMileage: Number,
-
-        finishChargeLevel: Number,
-        finishMileage: Number,
-        endDate: Date
-    }]
 }, {
     timestamps: true
 });
