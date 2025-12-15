@@ -12,6 +12,9 @@ export class DivideByZeroError extends Error {
     }
 }
 
+const addSubOperators = ['+', '-'];
+const mulDivOperators = ['*', '/'];
+
 function convertToRPN(expression: string): string {
     if (typeof expression !== "string") throw new TypeError("Expression must be a string");
     if (expression.trim() === "") throw new Error("Expression is empty");
@@ -19,16 +22,14 @@ function convertToRPN(expression: string): string {
     const tokens = expression.trim().split(/\s+/);
     const result: string[] = [];
     const stack: string[] = [];
-    const opr1 = ['+', '-'];
-    const opr2 = ['*', '/'];
     let openBrackets = 0;
 
     const handleOperator = (token: string) => {
-        const precedence = opr2.includes(token) ? 2 : 1;
+        const precedence = mulDivOperators.includes(token) ? 2 : 1;
 
         while (stack.length > 0 && stack[stack.length - 1] !== '(') {
             const top = stack[stack.length - 1];
-            const topPrecedence = opr2.includes(top) ? 2 : 1;
+            const topPrecedence = mulDivOperators.includes(top) ? 2 : 1;
 
             if (topPrecedence >= precedence) {
                 result.push(stack.pop()!);
@@ -39,14 +40,21 @@ function convertToRPN(expression: string): string {
         stack.push(token);
     };
 
+    const isValidToken = (token: string): boolean => {
+        return !/^\d+(\.\d+)?$/.test(token)
+            && !addSubOperators.includes(token)
+            && !mulDivOperators.includes(token)
+            && token !== '(' && token !== ')'
+    }
+
     for (const token of tokens) {
-        if (!/^\d+(\.\d+)?$/.test(token) && !opr1.includes(token) && !opr2.includes(token) && token !== '(' && token !== ')') {
+        if (isValidToken(token)) {
             throw new BadSequenceError(`Invalid token: ${token}`);
         }
 
         if (!isNaN(Number(token))) {
             result.push(token);
-        } else if (opr1.includes(token) || opr2.includes(token)) {
+        } else if (addSubOperators.includes(token) || mulDivOperators.includes(token)) {
             handleOperator(token);
         } else if (token === '(') {
             stack.push(token);
@@ -81,7 +89,7 @@ export function calculateRPNExpression(rpn: string): number {
         '-': (a, b) => a - b,
         '*': (a, b) => a * b,
         '/': (a, b) => {
-            if (a === 0 && b === 0) throw new DivideByZeroError();
+            if (b === 0) throw new DivideByZeroError();
             return a / b;
         },
     };
