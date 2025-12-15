@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IHATEOASLinks } from "./Scooter";
+import { ICreditCard, IHATEOASLinks } from "./Scooter";
 const { Schema } = mongoose;
 
 export interface IDriver extends mongoose.Document {
@@ -9,6 +9,7 @@ export interface IDriver extends mongoose.Document {
     email: string;
     phone: string;
     licenseNumber: string;
+    creditCards: ICreditCard;
     createdAt: Date;
     updatedAt: Date;
     links?: IHATEOASLinks;
