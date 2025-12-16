@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "lib": [
+            "es2017",
+            "dom"
+        ],
+        "types": [
+            "jest",
+            "node",
+            "puppeteer",
+            "jest-environment-puppeteer"
+        ],
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "strict": false,
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": [
+        "src/**/*"
+, "react-redux-realworld-example-app/src/tests"    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
