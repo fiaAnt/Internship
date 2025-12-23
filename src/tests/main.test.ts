@@ -1,126 +1,91 @@
-describe('Realworld App - Test', () => {
-    const email = 'test@example.com';
-    const password = 'TestPassword123!';
-    let popularTag: string;
+import { BR_URL, TEST_DATA } from '../constants';
+import {
+    setupPage,
+    getPageTitle,
+    getNavbarContent,
+    registerUser,
+    logoutUser,
+    loginUser,
+    getMostPopularTag,
+    createArticle,
+    searchArticleByTag,
+    isUserLoggedIn
+} from '../helpers';
 
+describe('Realworld App verification', () => {
     beforeAll(async () => {
         await setupPage();
     });
+
     test('Title of the page', async () => {
-        const title = await page.title();
+        const title = await getPageTitle();
         expect(title).toBe('Conduit');
     });
 
     test('Header of the page', async () => {
-        const headerHandle = await page.$('nav.navbar .navbar-brand');
-        if (headerHandle) {
-            const html = await page.evaluate(
-                (el) => el.innerHTML,
-                headerHandle
-            );
-            expect(html).toContain('conduit');
-        } else {
-            const headerText = await page.evaluate(() => {
-                return document.querySelector('nav.navbar')?.textContent || '';
-            });
-            expect(headerText).toContain('conduit');
-        }
+        const headerContent = await getNavbarContent();
+        expect(headerContent).toContain('conduit');
     });
-    test('register and log out', async () => {
+});
+
+describe('User Registration', () => {
+    beforeEach(async () => {
+        await page.goto(BR_URL);
+    });
+
+    test('Register and logout user', async () => {
         const timestamp = Date.now();
         const username = `testuser${timestamp}`;
         const emailReg = `test${timestamp}@example.com`;
         const passwordReg = 'TestPassword123!';
 
-        await page.goto(BR_URL);
-        await page.waitForSelector('nav', { visible: true });
+        await registerUser(username, emailReg, passwordReg);
+        const loggedIn = await isUserLoggedIn();
+        expect(loggedIn).toBe(true);
+        await logoutUser();
 
-        const registerLink = await page.$('a[href="/register"]');
-        if (!registerLink) throw new Error('Register link not found!');
-        await registerLink.click();
-
-        await page.waitForSelector('input[placeholder="Username"]', { visible: true });
-        await page.type('input[placeholder="Username"]', username);
-        await page.type('input[placeholder="Email"]', emailReg);
-        await page.type('input[placeholder="Password"]', passwordReg);
-
-        await Promise.all([
-            page.waitForNavigation({ waitUntil: 'networkidle0' }),
-            page.click('button[type="submit"]')
-        ]);
-
-        await page.waitForSelector(`a[href="/@${username}"]`, { visible: true, timeout: 10000 });
-        console.log(`registered: ${username}`);
-
-        await page.click('a[href="/settings"]');
-        await page.waitForSelector('button.btn-outline-danger', { visible: true });
-        await Promise.all([
-            page.waitForNavigation({ waitUntil: 'networkidle0' }),
-            page.click('button.btn-outline-danger')
-        ]);
-
-        const signInLinkText = await page.$eval('a[href="/login"]', el => el.textContent?.trim());
-        expect(signInLinkText).toBe('Sign in');
-        console.log('logged out');
+        const loggedOut = !(await isUserLoggedIn());
+        expect(loggedOut).toBe(true);
     });
-    test('sign in, create post and find it in Global Feed by most popular tag', async () => {
-        const postTitle = `Test Post ${Date.now()}`;
-        const postDescription = 'post description';
-        const postBody = 'body of the test post';
+});
 
+describe('User Login', () => {
+    beforeEach(async () => {
         await page.goto(BR_URL, { waitUntil: 'networkidle0' });
-        await page.click('a[href="/login"]');
-        await page.waitForSelector('input[placeholder="Email"]');
-        await page.type('input[placeholder="Email"]', email);
-        await page.type('input[placeholder="Password"]', password);
+    });
 
-        await Promise.all([
-            page.waitForNavigation({ waitUntil: 'networkidle0' }),
-            page.click('button[type="submit"]')
-        ]);
-        await page.waitForSelector('a[href^="/@"]');
-        console.log('logged in');
+    test('Login with existing credentials', async () => {
+        await loginUser(TEST_DATA.EMAIL, TEST_DATA.PASSWORD);
+        const loggedIn = await isUserLoggedIn();
+        expect(loggedIn).toBe(true);
+    });
+});
 
-        await page.waitForSelector('.tag-list a.tag-pill');
-        popularTag = await page.$eval(
-            '.tag-list a.tag-pill',
-            el => el.textContent.trim()
-        );
-        console.log(`most popular tag: ${popularTag}`);
+describe('Article Management', () => {
+    const email = TEST_DATA.EMAIL;
+    const password = TEST_DATA.PASSWORD;
+    let popularTag: string;
+    const postTitle = `Test Post ${Date.now()}`;
+    const postDescription = 'post description';
+    const postBody = 'body of the test post';
 
-        await page.click('a[href="/editor"]');
-        await page.waitForSelector('input[placeholder="Article Title"]');
-        await page.type('input[placeholder="Article Title"]', postTitle);
-        await page.type('input[placeholder="What\'s this article about?"]', postDescription);
-        await page.type('textarea[placeholder="Write your article (in markdown)"]', postBody);
-        await page.type('input[placeholder="Enter tags"]', popularTag);
-        await page.keyboard.press('Enter');
-        await Promise.all([
-            page.waitForNavigation({ waitUntil: 'networkidle0' }),
-            page.click('button.btn-primary')
-        ]);
+    beforeEach(async () => {
+        await page.goto(BR_URL, { waitUntil: 'networkidle0' });
+        const loggedIn = await isUserLoggedIn();
+        if (!loggedIn) {
+            await loginUser(email, password);
+        }
+    });
 
-        await page.waitForSelector('h1');
+    test('Create article and find it by popular tag', async () => {
+        popularTag = await getMostPopularTag();
+        await createArticle(postTitle, postDescription, postBody, popularTag);
         const createdTitle = await page.$eval('h1', el => el.textContent.trim());
         expect(createdTitle).toBe(postTitle);
-        console.log('post created');
+
         await page.goto(BR_URL, { waitUntil: 'networkidle0' });
-        await page.waitForSelector('.tag-list');
-
-        await page.evaluate(tag => {
-            const tags = Array.from(document.querySelectorAll<HTMLElement>('.tag-list a.tag-pill'));
-            const target = tags.find(t => t.textContent.trim() === tag);
-            if (target) target.click();
-        }, popularTag);
-
-        await page.waitForSelector('.article-preview');
-
-        const postFound = await page.evaluate(title => {
-            return Array.from(document.querySelectorAll('.article-preview h1'))
-                .some(el => el.textContent.trim() === title);
-        }, postTitle);
+        const postFound = await searchArticleByTag(popularTag, postTitle);
 
         expect(postFound).toBe(true);
-        console.log('post found in Global Feed by popular tag');
     });
 });
