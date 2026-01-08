@@ -1,17 +1,9 @@
-const BR_URL = 'http://localhost:4100/';
+import { SELECTORS } from './constants';
 
-declare global {
-    var BR_URL: string;
-    var setupPage: () => Promise<void>;
+
+export async function setupPage(): Promise<void> {
+    console.log('Page available?', typeof page !== 'undefined');
+
+    await page.goto(process.env.BR_URL, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector(SELECTORS.NAVBAR, { timeout: 10000 });
 }
-
-Object.assign(global, {
-    BR_URL,
-    setupPage: async () => {
-        console.log('Page available?', typeof page !== 'undefined');
-        await page.goto(BR_URL, { waitUntil: 'domcontentloaded' });
-        await page.waitForSelector('nav.navbar', { timeout: 10000 });
-    }
-});
-
-export { };

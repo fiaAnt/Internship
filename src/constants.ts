@@ -1,10 +1,3 @@
-export const BR_URL = 'http://localhost:4100/';
-
-export const TEST_DATA = {
-    EMAIL: 'test@example.com',
-    PASSWORD: 'TestPassword123!',
-};
-
 export const SELECTORS = {
     NAVBAR: 'nav.navbar',
     NAVBAR_BRAND: 'nav.navbar .navbar-brand',
@@ -13,6 +6,7 @@ export const SELECTORS = {
     SETTINGS_LINK: 'a[href="/settings"]',
     EDITOR_LINK: 'a[href="/editor"]',
     USER_PROFILE_LINK: (username: string) => `a[href="/@${username}"]`,
+    PROFILE_LINK: 'a[href^="/@"]',
 
     USERNAME_INPUT: 'input[placeholder="Username"]',
     EMAIL_INPUT: 'input[placeholder="Email"]',

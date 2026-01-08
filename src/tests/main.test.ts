@@ -1,16 +1,7 @@
-import { BR_URL, TEST_DATA } from '../constants';
-import {
-    setupPage,
-    getPageTitle,
-    getNavbarContent,
-    registerUser,
-    logoutUser,
-    loginUser,
-    getMostPopularTag,
-    createArticle,
-    searchArticleByTag,
-    isUserLoggedIn
-} from '../helpers';
+import { createArticle, getArticleTitle, getMostPopularTag, getNavbarContent, getPageTitle, searchArticleByTag } from '../contentActions';
+import { navigateToHome } from '../navigation';
+import { setupPage } from '../setup';
+import { ensureUserLoggedIn, isUserLoggedIn, loginUser, logoutUser, registerUser } from '../userActions';
 
 describe('Realworld App verification', () => {
     beforeAll(async () => {
@@ -30,7 +21,7 @@ describe('Realworld App verification', () => {
 
 describe('User Registration', () => {
     beforeEach(async () => {
-        await page.goto(BR_URL);
+        await navigateToHome();
     });
 
     test('Register and logout user', async () => {
@@ -51,39 +42,37 @@ describe('User Registration', () => {
 
 describe('User Login', () => {
     beforeEach(async () => {
-        await page.goto(BR_URL, { waitUntil: 'networkidle0' });
+        await navigateToHome('networkidle0');
     });
 
     test('Login with existing credentials', async () => {
-        await loginUser(TEST_DATA.EMAIL, TEST_DATA.PASSWORD);
+
+        await loginUser(process.env.EMAIL, process.env.PASSWORD);
         const loggedIn = await isUserLoggedIn();
         expect(loggedIn).toBe(true);
     });
 });
 
 describe('Article Management', () => {
-    const email = TEST_DATA.EMAIL;
-    const password = TEST_DATA.PASSWORD;
-    let popularTag: string;
-    const postTitle = `Test Post ${Date.now()}`;
-    const postDescription = 'post description';
-    const postBody = 'body of the test post';
+    const email = process.env.EMAIL;
+    const password = process.env.PASSWORD;
 
     beforeEach(async () => {
-        await page.goto(BR_URL, { waitUntil: 'networkidle0' });
-        const loggedIn = await isUserLoggedIn();
-        if (!loggedIn) {
-            await loginUser(email, password);
-        }
+        await navigateToHome('networkidle0');
+        await ensureUserLoggedIn(email, password);
     });
 
     test('Create article and find it by popular tag', async () => {
-        popularTag = await getMostPopularTag();
-        await createArticle(postTitle, postDescription, postBody, popularTag);
-        const createdTitle = await page.$eval('h1', el => el.textContent.trim());
-        expect(createdTitle).toBe(postTitle);
+        const popularTag = await getMostPopularTag();
+        const postTitle = `Test Post ${Date.now()}`;
+        const postDescription = 'post description';
+        const postBody = 'body of the test post';
 
-        await page.goto(BR_URL, { waitUntil: 'networkidle0' });
+        await createArticle(postTitle, postDescription, postBody, popularTag);
+        expect(await getArticleTitle()).toBe(postTitle);
+
+
+        await navigateToHome();
         const postFound = await searchArticleByTag(popularTag, postTitle);
 
         expect(postFound).toBe(true);
