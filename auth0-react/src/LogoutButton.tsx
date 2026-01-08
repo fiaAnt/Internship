@@ -1,14 +1,13 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { userManager } from './oidc';
+import './index.css';
 
 const LogoutButton = () => {
-  const { logout } = useAuth0();
+  const logout = async () => {
+    await userManager.signoutRedirect();
+  };
+
   return (
-    <button
-      onClick={() =>
-        logout({ logoutParams: { returnTo: window.location.origin } })
-      }
-      className="button-logout"
-    >
+    <button onClick={logout} className="button-logout">
       Log Out
     </button>
   );

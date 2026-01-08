@@ -1,20 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Auth0Provider } from '@auth0/auth0-react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
+import Callback from './Callback';
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {' '}
-    <Auth0Provider
-      domain={import.meta.env.VITE_AUTH0_DOMAIN}
-      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience: 'https://proba-api',
-      }}
-    >
-      {' '}
-      <App />{' '}
-    </Auth0Provider>{' '}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/callback" element={<Callback />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );

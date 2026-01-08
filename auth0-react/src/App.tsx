@@ -1,56 +1,54 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect, useState } from 'react';
 import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
 import Profile from './Profile';
-import './index.css';
+import { User } from 'oidc-client-ts';
+import { userManager } from './oidc';
 
 function App() {
-  const { isAuthenticated, isLoading, error, getAccessTokenSilently } =
-    useAuth0();
+  const [user, setUser] = useState<User | null>(null);
+  const [protectedData, setProtectedData] = useState<string | null>(null);
 
-  const callApi = async () => {
-    try {
-      const token = await getAccessTokenSilently({
-        authorizationParams: {
-          audience: 'https://proba-api',
-        },
-      });
+  useEffect(() => {
+    userManager.getUser().then((u) => setUser(u));
+  }, []);
 
-      const res = await fetch('http://localhost:3000/api/private', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  useEffect(() => {
+    const fetchProtected = async () => {
+      if (!user) return;
 
-      const data = await res.json();
-      alert(data.message);
-    } catch (err) {
-      console.error(err);
-      alert('Error calling API');
-    }
-  };
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_URL}/api/private`,
+          {
+            headers: { Authorization: `Bearer ${user.access_token}` },
+          }
+        );
+        if (!res.ok) {
+          console.error('Server response:', res.status, await res.text());
+          setProtectedData(`Error: ${res.status}`);
+          return;
+        }
+        const data = await res.json();
+        setProtectedData(data.message);
+      } catch (err) {
+        console.error(err);
+        setProtectedData('Error fetching protected data');
+      }
+    };
+    fetchProtected();
+  }, [user]);
 
-  if (isLoading) return <div>Loading...</div>;
-
-  if (error) return <div>{error.message}</div>;
+  if (!user) return <LoginButton />;
 
   return (
-    <div className="app-container">
-      <h1>Auth0 Proba</h1>
-
-      {isAuthenticated ? (
-        <>
-          <Profile />
-          <div className="buttons">
-            <button className="button-api" onClick={callApi}>
-              Call protected API
-            </button>
-            <LogoutButton />
-          </div>
-        </>
-      ) : (
-        <LoginButton />
-      )}
+    <div>
+      <h1>OIDC Proba</h1>
+      <Profile />
+      <p>
+        <strong>Protected API response:</strong> {protectedData ?? 'Loading...'}
+      </p>
+      <LogoutButton />
     </div>
   );
 }

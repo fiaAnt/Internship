@@ -1,12 +1,16 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { userManager } from './oidc';
+import './index.css';
 
-const LoginButton = () => {
-  const { loginWithRedirect } = useAuth0();
+export default function LoginButton() {
+  const login = async () => {
+    await userManager.removeUser();
+    await userManager.clearStaleState();
+    await userManager.signinRedirect();
+  };
+
   return (
-    <button onClick={() => loginWithRedirect()} className="button-login">
-      Log In
+    <button className="button-login" onClick={login}>
+      Login
     </button>
   );
-};
-
-export default LoginButton;
+}

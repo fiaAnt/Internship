@@ -1,28 +1,28 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect, useState } from 'react';
+import { User } from 'oidc-client-ts';
+import { userManager } from './oidc';
+import './index.css';
 
 const Profile = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const [user, setUser] = useState<User | null>(null);
 
-  if (isLoading) {
-    return <div className="loading-text">Loading profile...</div>;
-  }
-  const { picture, name, email } = user ?? {};
-  return isAuthenticated && user ? (
+  useEffect(() => {
+    userManager.getUser().then(setUser);
+  }, []);
+
+  if (!user) return null;
+
+  const { name, email, picture } = user.profile;
+
+  return (
     <>
-      <img
-        src={picture}
-        alt={name || 'User'}
-        className="profile-picture"
-        onError={() => {
-          throw new Error('что-то пошло не так');
-        }}
-      />
-      <div style={{ textAlign: 'center' }}>
+      {picture && <img src={picture} alt={name} className="profile-picture" />}
+      <div>
         <div className="profile-name">{name}</div>
         <div className="profile-email">{email}</div>
       </div>
     </>
-  ) : null;
+  );
 };
 
 export default Profile;
