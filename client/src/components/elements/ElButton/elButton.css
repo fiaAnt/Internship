@@ -1,0 +1,38 @@
+.el-button {
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.el-button-primary {
+  background-color: #dfe8f3;
+}
+
+.el-button-secondary {
+  background-color: #e9f0f8;
+}
+
+.el-button-danger {
+  background-color: #ff4d4f;
+}
+
+.el-button-small {
+  padding: 6px 12px;
+}
+
+.el-button-medium {
+  padding: 8px 16px;
+}
+
+.el-button-large {
+  padding: 14px 28px;
+}

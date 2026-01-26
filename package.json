@@ -1,0 +1,61 @@
+{
+  "name": "gamescatalog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --config client/webpack.config.js --mode development",
+    "build": "webpack --config client/webpack.config.js --mode production",
+    "server": "ts-node server/src/services/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiaAnt/Internship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fiaAnt/Internship/issues"
+  },
+  "homepage": "https://github.com/fiaAnt/Internship#readme",
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
+    "axios": "^1.13.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-oauth2-jwt-bearer": "^1.7.3",
+    "express-openid-connect": "^2.19.4",
+    "i18next": "^25.8.0",
+    "mongodb": "^7.0.0",
+    "mongoose": "^9.1.1",
+    "node-fetch": "^3.3.2",
+    "oidc-client-ts": "^3.4.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-i18next": "^16.5.3",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@types/cors": "^2.8.19",
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.5",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}

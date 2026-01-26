@@ -1,0 +1,152 @@
+.game-description,
+.game-media,
+.game-extras {
+  padding: 40px 50px;
+  margin-bottom: 30px;
+}
+
+.game-meta {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  padding: 50px;
+  border-radius: 20px;
+}
+
+.game-meta-img {
+  width: 280px;
+  height: 400px;
+  border-radius: 18px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.game-meta-inf {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.game-meta-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.game-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.game-description-summary {
+  margin-bottom: 20px;
+}
+
+.game-media {
+  background-color: #eef3f9;
+}
+
+.game-media h3 {
+  margin-bottom: 20px;
+}
+
+.game-media .screenshots {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin-bottom: 25px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #c1d1e8 #eef3f9;
+}
+
+.game-media .screenshots::-webkit-scrollbar {
+  height: 6px;
+}
+
+.game-media .screenshot-container {
+  flex: 0 0 auto;
+  width: 220px;
+}
+
+.game-media .screenshots img {
+  height: 150px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.game-media iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  border-radius: 16px;
+  margin: 10px;
+}
+
+.game-extras {
+  margin-bottom: 28px;
+}
+
+.game-extras h3 {
+  margin-bottom: 10px;
+}
+
+.game-extras span {
+  display: inline-block;
+  padding: 10px 14px;
+  margin: 10px;
+  border-radius: 20px;
+  border: 1px solid #d1d9e6;
+}
+
+.game-extras a {
+  display: inline-flex;
+  align-items: center;
+  color: #0066cc;
+  padding: 8px 12px;
+  margin: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  border: 1px solid #d1e0ff;
+}
+
+.game-extras a:hover {
+  background: #e6f0ff;
+  color: #0052a3;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .game-meta,
+  .game-description,
+  .game-media,
+  .game-extras {
+    padding: 18px;
+  }
+
+  .game-meta {
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+
+  .game-meta-img {
+    width: 100%;
+    max-width: 260px;
+    height: 360px;
+  }
+
+  .game-media .screenshots {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .game-media .screenshots img {
+    height: 120px;
+  }
+
+  .game-media iframe {
+    height: 240px;
+  }
+}

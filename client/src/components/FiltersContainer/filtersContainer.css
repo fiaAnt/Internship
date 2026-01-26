@@ -1,0 +1,31 @@
+.filters-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+}
+
+.filters-wrapper::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #333;
+  font-size: 12px;
+}
+
+.filters-container {
+  margin: 20px;
+  margin-bottom: 60px;
+}
+
+.filter-select {
+  width: 200px;
+  padding: 8px;
+  border: 2px solid #aaa;
+  border-radius: 8px;
+  appearance: none;
+  cursor: pointer;
+  font-size: 16px;
+}
