@@ -1,0 +1,64 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "ESNext",
+    "lib": [
+      "es2020",
+      "dom",
+      "dom.iterable"
+    ],
+    "strict": true,
+    "jsx": "react-jsx",
+    "types": [
+      "react",
+      "react-dom",
+      "jest"
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "sourceMap": true,
+    "baseUrl": "client/src",
+    "paths": {
+      "@store/*": [
+        "store/*"
+      ],
+      "@api/*": [
+        "api/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ],
+      "@types/*": [
+        "types/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@elements/*": [
+        "components/elements/*"
+      ],
+    }
+  },
+  "include": [
+    "server/src/**/*",
+    "client/src/components",
+    "client/src/pages",
+    "client/src/hooks",
+    "client/src/types",
+    "client/src/elements",
+    "client/src/index.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "client/dist"
+  ]
+}

@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  font-family: 'PT Serif', serif;
+}
+
+.text-container h1 {
+  color: #3a84f4;
+  padding-left: 50px;
+  font-size: 1.8em;
+}
+
+.text-container p {
+  color: #808080;
+  padding-left: 50px;
+  font-size: 1.2em;
+}

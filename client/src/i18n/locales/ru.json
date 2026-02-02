@@ -1,0 +1,51 @@
+{
+  "header": {
+    "explore": "Обзор",
+    "comingSoon": "Скоро выйдут",
+    "title": "Каталог игр"
+  },
+  "filters": {
+    "selectGenre": "Выберите жанр",
+    "selectPlatform": "Выберите платформу",
+    "selectYear": "Выберите год",
+    "apply": "Выбрать"
+  },
+  "search": {
+    "placeholder": "Поиск игр..."
+  },
+  "comingSoon": {
+    "text": "Во что вы скоро сыграете:"
+  },
+  "gameCard": {
+    "genres": "Жанры:",
+    "platforms": "Платформы:"
+  },
+  "gameDescription": {
+    "summary": "Описание",
+    "storyline": "Сюжет"
+  },
+  "gameMeta": {
+    "rating": "Рейтинг",
+    "release": "Дата выхода",
+    "genres": "Жанры",
+    "platforms": "Платформы",
+    "themes": "Темы"
+  },
+  "gameMedia": {
+    "screenshots": "Скриншоты",
+    "videos": "Видео"
+  },
+  "gameExtras": {
+    "companies": "Компании",
+    "similarGames": "Похожие игры",
+    "websites": "Сайты"
+  },
+  "profile": {
+    "title": "Профиль",
+    "name": "Имя:",
+    "email": "Почта:",
+    "ru": "Русский",
+    "eng": "Английский",
+    "logout": "Выйти"
+  }
+}

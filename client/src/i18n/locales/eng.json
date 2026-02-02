@@ -1,0 +1,51 @@
+{
+  "header": {
+    "explore": "Explore",
+    "comingSoon": "Coming soon",
+    "title": "Games Catalog"
+  },
+  "filters": {
+    "selectGenre": "Select genre",
+    "selectPlatform": "Select platform",
+    "selectYear": "Select year",
+    "apply": "Apply"
+  },
+  "search": {
+    "placeholder": "Search games..."
+  },
+  "comingSoon": {
+    "text": "What you’ll be playing soon:"
+  },
+  "gameCard": {
+    "genres": "Genres:",
+    "platforms": "Platforms:"
+  },
+  "gameDescription": {
+    "summary": "Summary",
+    "storyline": "Storyline"
+  },
+  "gameMeta": {
+    "rating": "Rating",
+    "release": "Release",
+    "genres": "Genres",
+    "platforms": "Platforms",
+    "themes": "Themes"
+  },
+  "gameMedia": {
+    "screenshots": "Screenshots",
+    "videos": "Videos"
+  },
+  "gameExtras": {
+    "companies": "Companies",
+    "similarGames": "Similar Games",
+    "websites": "Websites"
+  },
+  "profile": {
+    "title": "Profile",
+    "name": "Name:",
+    "email": "Email:",
+    "ru": "Russian",
+    "eng": "English",
+    "logout": "Log out"
+  }
+}

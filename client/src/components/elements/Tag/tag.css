@@ -1,0 +1,14 @@
+.tag {
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+
+.tag.genre {
+  background: rgba(58, 132, 244, 0.18);
+  color: #3a84f4;
+}
+
+.tag.platform {
+  background: rgba(255, 255, 255, 0.729);
+  color: #aaa;
+}
