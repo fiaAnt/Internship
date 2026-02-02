@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { User } from 'types/User';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User } from 'types/user';
 import { loadUser } from './user.thunks';
 
 export interface UserState {
@@ -33,8 +33,15 @@ export const userSlice = createSlice({
                 state.loading = true;
             })
             .addCase(loadUser.fulfilled, (state, action) => {
-                state.user = action.payload.data.user || null;
-                state.isAuthenticated = action.payload.data.isAuthenticated;
+                if (action.payload.user) {
+                    state.user = {
+                        ...action.payload.user,
+                        sub: action.payload.user.sub,
+                    };
+                } else {
+                    state.user = null;
+                }
+                state.isAuthenticated = action.payload.isAuthenticated;
                 state.loading = false;
             })
             .addCase(loadUser.rejected, (state) => {

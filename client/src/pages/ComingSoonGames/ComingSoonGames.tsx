@@ -1,40 +1,33 @@
 import React from 'react';
+import { Box, Container, VStack, Heading } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+
 import Bar from '@components/Bar';
-import { ComingSoonGameCard } from '@components/GameCard';
-import Skeleton from '@components/Skeleton';
+import GamesList from '@components/GameList';
 import { useGamesExplorer } from '@hooks/useGamesList';
 import { useInfiniteScroll } from '@hooks/useInfiniteScroll';
-import ElText from '@elements/ElText';
-import { useTranslation } from 'react-i18next';
-import './ComingSoonGames.css';
 
 const ComingSoonGames: React.FC = () => {
   const { games, loading, hasMore, loadGames } =
     useGamesExplorer('/api/coming-soon');
 
   useInfiniteScroll(loadGames, loading, hasMore);
+
   const { t } = useTranslation();
 
   return (
-    <div>
+    <Box minH="100vh" bg="gray.50">
       <Bar />
-      <div className="coming-soon-title">
-        <ElText as="h2" variant="subtitle" weight="bold" color="accent">
-          {t('comingSoon.text')}
-        </ElText>
-      </div>
-      <div className="games-container">
-        {loading &&
-          games.length === 0 &&
-          Array.from({ length: 12 }).map((_, i) => (
-            <Skeleton key={`skeleton-${i}`} />
-          ))}
-        {games.map((game) => (
-          <ComingSoonGameCard key={game.id} game={game} />
-        ))}
-      </div>
-      {!hasMore}
-    </div>
+
+      <Container maxW="8xl" py={6} px={16}>
+        <VStack spacing={6} align="stretch">
+          <Heading as="h2" size="lg" color="blue.600">
+            {t('comingSoon.text')}
+          </Heading>
+          <GamesList games={games} isComingSoon isLoading={loading} />
+        </VStack>
+      </Container>
+    </Box>
   );
 };
 

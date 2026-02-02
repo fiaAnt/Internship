@@ -8,6 +8,8 @@ import { auth } from 'express-openid-connect';
 import { connectToMongoDB } from '../config/mongo.ts';
 import { getAuthConfig } from '../config/auth0.ts';
 import gameRouter from '../routes/game.routes.ts';
+import translateRouter from '../routes/translate.routes.ts';
+import commentRouter from '../routes/comment.routes.ts';
 import routes from '../routes/index.ts';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,9 +26,8 @@ async function startServer() {
 
     app.use(cors(corsConfig));
     app.use(express.json());
-    app.use(auth(getAuthConfig()));
+    app.use('/api', auth(getAuthConfig()));
     app.use('/api', routes);
-    app.use('/api/game', gameRouter);
     app.get('/', (_req, res) => {
         res.redirect(`${process.env.CLIENT_URL}/`);
     });

@@ -1,10 +1,12 @@
-import { api } from '../axios';
+import { fetchApi } from '@api/fetchApi';
+import { IGDBItem } from 'types/igdb';
 
 export const FiltersService = {
-    getPlatforms() {
-        return api.get('/platforms');
+    getPlatforms(): Promise<IGDBItem[]> {
+        return fetchApi<IGDBItem[]>('/platforms');
     },
-    getGenres() {
-        return api.get(`/genres`);
+
+    getGenres(): Promise<IGDBItem[]> {
+        return fetchApi<IGDBItem[]>('/genres');
     },
 };

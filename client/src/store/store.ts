@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import gamesReducer from './features/games/games.slice'
 import gameInfoReducer from './features/gameInfo/gameInfo.slice'
-import filtersDataReducer from './features/filtersData/filterData.slice'
+import filtersDataReducer from './features/filtersData/filtersData.slice'
 import userReducer from './features/user/user.slice'
+import commentReducer from './features/comments/comments.slice'
+import favoritesReducer from './features/favorites/favorites.slice'
 
 
 export const store = configureStore({
@@ -11,6 +13,8 @@ export const store = configureStore({
         game: gameInfoReducer,
         filtersData: filtersDataReducer,
         user: userReducer,
+        comment: commentReducer,
+        favorites: favoritesReducer,
     },
 })
 

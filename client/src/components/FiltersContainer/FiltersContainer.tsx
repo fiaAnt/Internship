@@ -1,10 +1,11 @@
 import React from 'react';
-import { FiltersProps } from './FiltersContainer.types';
-import './filtersContainer.css';
-import ElButton from '@elements/ElButton';
+import { Box, Select, HStack, Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+
+import { FiltersProps } from './FiltersContainer.types';
 import { RootState } from '@store/store';
+import ElButton from '@components/elements/ElButton';
 
 const FiltersContainer: React.FC<FiltersProps> = ({
   genreId,
@@ -17,67 +18,78 @@ const FiltersContainer: React.FC<FiltersProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const { genres, platforms } = useSelector(
-    (state: RootState) => state.filtersData,
-  );
+  const {
+    genres = [],
+    platforms = [],
+    loading,
+  } = useSelector((state: RootState) => state.filtersData);
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+
   return (
-    <>
-      <div className="filters-container">
-        <div className="filters-wrapper">
-          <select
-            className="filter-select"
-            value={genreId ?? ''}
-            onChange={(e) =>
-              setGenreId(e.target.value ? Number(e.target.value) : null)
-            }
-          >
-            <option value="">{t('filters.selectGenre')}</option>
-            {genres.map((genre) => (
-              <option key={genre.id} value={genre.id}>
-                {genre.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="filters-wrapper">
-          <select
-            className="filter-select"
-            value={platformId ?? ''}
-            onChange={(e) =>
-              setPlatformId(e.target.value ? Number(e.target.value) : null)
-            }
-          >
-            <option value="">{t('filters.selectPlatform')}</option>
-            {platforms.map((platform) => (
-              <option key={platform.id} value={platform.id}>
-                {platform.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="filters-wrapper">
-          <select
-            className="filter-select"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          >
-            <option value="">{t('filters.selectYear')}</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-            <option value="2021">2021</option>
-            <option value="2020">2020</option>
-            <option value="2019">2019</option>
-            <option value="2018">2018</option>
-            <option value="2017">2017</option>
-          </select>
-        </div>
-        <ElButton variant="primary" onClick={onApply}>
+    <Box width="100%" pt={2} borderTop="1px solid" borderColor="blue.100">
+      <HStack spacing={3} width="100%" flexWrap="wrap">
+        <Select
+          placeholder={t('filters.selectGenre')}
+          value={genreId ?? ''}
+          isDisabled={loading}
+          onChange={(e) =>
+            setGenreId(e.target.value ? Number(e.target.value) : null)
+          }
+          flex={{ base: '1 1 100%', md: 1 }}
+          size="md"
+        >
+          {genres.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          placeholder={t('filters.selectPlatform')}
+          value={platformId ?? ''}
+          isDisabled={loading}
+          onChange={(e) =>
+            setPlatformId(e.target.value ? Number(e.target.value) : null)
+          }
+          flex={{ base: '1 1 100%', md: 1 }}
+          size="md"
+          minW="0"
+        >
+          {platforms.map((platform) => (
+            <option key={platform.id} value={platform.id}>
+              {platform.name}
+            </option>
+          ))}
+        </Select>
+
+        <Select
+          placeholder={t('filters.selectYear')}
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+          flex={{ base: '1 1 100%', md: 1 }}
+          size="md"
+        >
+          {years.map((y) => (
+            <option key={y} value={y.toString()}>
+              {y}
+            </option>
+          ))}
+        </Select>
+
+        <ElButton
+          onClick={onApply}
+          bg="blue.500"
+          color="white"
+          variant="secondary"
+          aria-label="Apply filters"
+        >
           {t('filters.apply')}
         </ElButton>
-      </div>
-    </>
+      </HStack>
+    </Box>
   );
 };
 

@@ -1,15 +1,24 @@
 import React from 'react';
-import { GameCard } from '../GameCard';
-import './gameList.css';
+import { SimpleGrid, Box, VStack } from '@chakra-ui/react';
 import { GamesListProps } from './GameList.types';
+import GameCard from '@components/GameCard';
+import GameCardSkeleton from '../GameCardSkeleton';
 
-const GamesList: React.FC<GamesListProps> = ({ games }) => {
+const GamesList: React.FC<GamesListProps> = ({
+  games,
+  isComingSoon = false,
+  isLoading = false,
+}) => {
   return (
-    <div className="games-container">
-      {games.map((game) => (
-        <GameCard key={game.id} game={game} />
-      ))}
-    </div>
+    <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={6} py={4}>
+      {isLoading && games.length === 0
+        ? Array.from({ length: 12 }).map((_, i) => (
+            <GameCardSkeleton key={`skeleton-${i}`} />
+          ))
+        : games.map((game) => (
+            <GameCard key={game.id} game={game} isComingSoon={isComingSoon} />
+          ))}
+    </SimpleGrid>
   );
 };
 

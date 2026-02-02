@@ -61,8 +61,8 @@ export const useGamesExplorer = (
         const isComingSoon = endpoint === '/api/coming-soon';
 
         const url = isComingSoon
-            ? `http://localhost:3001${endpoint}?offset=${state.offset}`
-            : `http://localhost:3001${endpoint}`;
+            ? `${process.env.REACT_APP_CLIENT_URL}${endpoint}?offset=${state.offset}`
+            : `${process.env.REACT_APP_CLIENT_URL}${endpoint}`;
 
         const res = await fetch(url, {
             method: isComingSoon ? 'GET' : 'POST',

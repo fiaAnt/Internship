@@ -1,24 +1,56 @@
 import React from 'react';
-import './elText.css';
-import { TextProps } from './ElText.types';
+import { Text } from '@chakra-ui/react';
+import {
+  ElTextProps,
+  TextColor,
+  TextVariant,
+  TextWeight,
+} from './ElText.types';
 
-const ElText: React.FC<TextProps> = ({
+const ElText: React.FC<ElTextProps> = ({
   children,
-  as: Component = 'p',
+  as = 'p',
   variant = 'body',
   weight = 'regular',
   color = 'primary',
-  className = '',
+  ...props
 }) => {
-  const classes = [
-    'text',
-    `text-${variant}`,
-    `text-${weight}`,
-    `text-${color}`,
-    className,
-  ].join(' ');
+  const fontSizes: Record<TextVariant, string> = {
+    title: '2xl',
+    navigation: 'xl',
+    subtitle: 'lg',
+    body: 'md',
+    caption: 'sm',
+    tag: 'xs',
+  };
 
-  return <Component className={classes}>{children}</Component>;
+  const fontWeights: Record<TextWeight, number> = {
+    regular: 400,
+    medium: 500,
+    bold: 700,
+  };
+
+  const colors: Record<TextColor, string> = {
+    primary: 'black',
+    secondary: 'white',
+    header: 'white',
+    accent: 'blue.400',
+    danger: 'red.500',
+  };
+
+  return (
+    <Text
+      as={as}
+      fontSize={fontSizes[variant]}
+      fontWeight={fontWeights[weight]}
+      color={colors[color]}
+      lineHeight="1.4"
+      fontFamily="'Inter Tight', system-ui, sans-serif"
+      {...props}
+    >
+      {children}
+    </Text>
+  );
 };
 
 export default ElText;

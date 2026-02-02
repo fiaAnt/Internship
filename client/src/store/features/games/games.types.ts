@@ -15,4 +15,5 @@ export interface GamesState {
     hasMore: boolean;
     page: number;
     filters: Filters;
+
 }

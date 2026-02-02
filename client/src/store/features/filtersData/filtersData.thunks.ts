@@ -1,16 +1,29 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FiltersService } from '@api/services/filters'
-
+import { FiltersService } from '@api/services/filters';
 
 export const loadFiltersData = createAsyncThunk(
     'filtersData/load',
-    async () => {
+    async (_, { rejectWithValue }) => {
+        try {
+            const [genres, platforms] = await Promise.all([
+                FiltersService.getGenres(),
+                FiltersService.getPlatforms(),
+            ]);
 
-        const [genres, platforms] = await Promise.all([FiltersService.getGenres(), FiltersService.getPlatforms()])
+            return { genres, platforms };
+        } catch (error: unknown) {
+            console.error('THUNK ERROR:', error);
 
-        return {
-            genres: genres.data,
-            platforms: platforms.data
-        };
+            const errorMessage = error instanceof Error
+                ? error.message
+                : typeof error === 'string'
+                    ? error
+                    : 'Unknown error occurred';
+
+            return rejectWithValue(errorMessage);
+
+        }
     }
 );
+
+

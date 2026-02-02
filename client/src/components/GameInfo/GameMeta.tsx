@@ -1,23 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Box, Flex, Image, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import ElText from '@elements/ElText';
+import { motion } from 'framer-motion';
 import Tag from '@elements/Tag';
 import { GameInfo } from 'types/gameInfo';
-import './gameInfo.css';
 import { useTranslation } from 'react-i18next';
+import selected from '@assets/images/selected.png';
+import notSelected from '@assets/images/notSelected.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@store/store';
+import { toggleFavorite } from '@store/features/favorites/favorites.thunks';
+
+const MotionImage = motion(Image);
 
 const GameMeta = ({ game }: { game: GameInfo }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.user);
+  const isFavorite = useSelector((state: RootState) =>
+    state.favorites.gameIds.includes(String(game.id)),
+  );
+
+  const handleFavoriteClick = () => {
+    if (!user?.sub) return;
+
+    dispatch(
+      toggleFavorite({
+        auth0Id: user.sub,
+        gameId: String(game.id),
+      }),
+    );
+  };
 
   return (
-    <div className="game-meta">
+    <Flex
+      direction={{ base: 'column', md: 'row' }}
+      bg="gray.50"
+      p={{ base: 6, md: 16 }}
+      borderRadius="2xl"
+      gap={{ base: 6, md: 10 }}
+      mb={6}
+      align={{ base: 'center', md: 'flex-start' }}
+    >
       {game.cover && (
-        <img
+        <Image
           src={`https:${game.cover.url.replace('t_thumb', 't_cover_big')}`}
           alt={game.name}
-          className="game-meta-img"
+          borderRadius="2xl"
+          objectFit="cover"
+          boxSize={{ base: '260px', md: '280px' }}
+          flexShrink={0}
         />
       )}
-      <div className="game-meta-inf">
+
+      <VStack align="stretch" spacing={5} flex={1}>
         <ElText as="h1" variant="title" weight="bold">
           {game.name}
         </ElText>
@@ -36,49 +72,62 @@ const GameMeta = ({ game }: { game: GameInfo }) => {
         )}
 
         {game.genres && (
-          <div className="game-meta-section">
-            <ElText as="p" variant="body">
+          <Box>
+            <ElText as="p" variant="body" mb={2}>
               {t('gameMeta.genres')}:
             </ElText>
-            <div className="game-tags-row">
+            <Wrap spacing={2}>
               {game.genres.map((g) => (
-                <Tag key={g.id} type="genre">
-                  {g.name}
-                </Tag>
+                <WrapItem key={g.id}>
+                  <Tag type="genre">{g.name}</Tag>
+                </WrapItem>
               ))}
-            </div>
-          </div>
+            </Wrap>
+          </Box>
         )}
 
         {game.platforms && (
-          <div className="game-meta-section">
-            <ElText as="p" variant="body">
+          <Box>
+            <ElText as="p" variant="body" mb={2}>
               {t('gameMeta.platforms')}:
             </ElText>
-            <div className="game-tags-row">
+            <Wrap spacing={2}>
               {game.platforms.map((p) => (
-                <Tag key={p.id} type="platform">
-                  {p.name}
-                </Tag>
+                <WrapItem key={p.id}>
+                  <Tag type="platform">{p.name}</Tag>
+                </WrapItem>
               ))}
-            </div>
-          </div>
+            </Wrap>
+          </Box>
         )}
 
         {game.themes && (
-          <div className="game-meta-section">
-            <ElText as="p" variant="body">
+          <Box>
+            <ElText as="p" variant="body" mb={2}>
               {t('gameMeta.themes')}:
             </ElText>
-            <div className="game-tags-row">
+            <Wrap spacing={2}>
               {game.themes.map((tItem) => (
-                <Tag key={tItem.id}>{tItem.name}</Tag>
+                <WrapItem key={tItem.id}>
+                  <Tag>{tItem.name}</Tag>
+                </WrapItem>
               ))}
-            </div>
-          </div>
+            </Wrap>
+          </Box>
         )}
-      </div>
-    </div>
+      </VStack>
+      <VStack>
+        <MotionImage
+          onClick={handleFavoriteClick}
+          src={isFavorite ? selected : notSelected}
+          alt="favorite"
+          boxSize="50px"
+          cursor="pointer"
+          whileTap={{ scale: 1.2 }}
+          transition={{ duration: 0.3 }}
+        />
+      </VStack>
+    </Flex>
   );
 };
 

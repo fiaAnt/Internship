@@ -4,10 +4,12 @@ import webpack from 'webpack';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({
+  path: path.resolve(__dirname, '.env'),
+});
 
 const config = {
   context: __dirname,
@@ -60,6 +62,12 @@ const config = {
         process.env.AUTH0_CLIENT_ID,
       ),
       'process.env.CLIENT_URL': JSON.stringify(process.env.CLIENT_URL),
+      'process.env.REACT_APP_BASE_URL': JSON.stringify(
+        process.env.REACT_APP_BASE_URL,
+      ),
+      'process.env.REACT_APP_CLIENT_URL': JSON.stringify(
+        process.env.REACT_APP_CLIENT_URL,
+      ),
     }),
   ],
 
